@@ -113,6 +113,18 @@ class Move(BaseModel):
     effect: Callable | None
     probability: int | None
 
+class ItemType(Enum):
+    ESCAPE = auto()
+    EVOLUTION = auto()
+
+class Item(BaseModel):
+    name: str
+    description: str
+    held_item: bool
+    item_type: ItemType
+    effect: Callable | None
+    price: int
+
 class Pokemon(BaseModel):
     id: int
     name: str
@@ -133,5 +145,5 @@ class Pokemon(BaseModel):
     iv: Annotated[list[int], Le(6)]
     ev: Annotated[list[int], Le(6)]
     status: Status
-    held_item: Item
+    held_item: Item | None
 
