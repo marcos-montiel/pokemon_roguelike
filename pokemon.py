@@ -1,8 +1,6 @@
-from collections.abc import Callable
+from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Annotated
-from annotated_types import Le
-from pydantic import BaseModel
+from items import Item
 
 class Gender(Enum):
     MALE = auto()
@@ -102,7 +100,11 @@ class Category(Enum):
     def __str__(self) -> str:
         return self.name.title()
 
-class Move(BaseModel):
+class MoveEffect(Enum):
+    ONE_KO = auto()
+
+@dataclass
+class Move:
     name: str
     mv_type: Type
     category: Category | None
@@ -110,28 +112,52 @@ class Move(BaseModel):
     accuracy: int | None
     pp: int
     effect_msg: str
-    effect: Callable | None
+    effect: MoveEffect | None
     probability: int | None
 
-class Pokemon(BaseModel):
-    id: int
-    name: str
-    gender: Gender
-    nature: Nature
-    types: Annotated[list[Type | None], Le(2)]
-    level: int
-    current_exp: int
-    exp_for_next_level: int
-    moves: Annotated[list[Move | None], Le(4)]
-    hp_max: int
-    hp_current: int
+@dataclass
+class Exp:
+    current: int
+    for_next_level: int
+
+@dataclass
+class Hp:
+    base: int
+    max: int
+    current: int
+
+@dataclass
+class Stat:
+    base: int
+    current: int
+
+@dataclass
+class Stats:
+    hp: int
     attack: int
     defence: int
     special_attack: int
     special_defence: int
     speed: int
-    iv: Annotated[list[int], Le(6)]
-    ev: Annotated[list[int], Le(6)]
+
+@dataclass
+class Pokemon:
+    id: int
+    name: str
+    gender: Gender
+    nature: Nature
+    types: list[Type | None]
+    level: int
+    exp: Exp
+    moves: list[Move | None]
+    hp: Hp
+    attack: Stat
+    defence: Stat
+    special_attack: Stat
+    special_defence: Stat
+    speed: Stat
+    iv: Stats
+    ev: Stats
     status: Status
     held_item: Item
 
